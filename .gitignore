@@ -1,2 +1,6 @@
+# RSpec
+spec/examples.txt
+
+# Data
 /data/jankens.csv
 /data/janken_details.csv
