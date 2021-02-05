@@ -2,16 +2,24 @@ require './lib/janken_cli'
 require 'stringio'
 
 RSpec.describe 'janken_cli' do
+
+  after :context do
+    $stdin = STDIN
+    $stdout = STDOUT
+  end
+
   describe '#main' do
+
     describe '正常な入力' do
+
       where(
         :player_1_hand_num,
         :player_2_hand_num,
         :player_1_hand_name,
         :player_2_hand_name,
         :result_message,
-        :player_1_result,
-        :player_2_result
+        :player_1_result_num,
+        :player_2_result_num
       ) do
         [
           [0, 0, 'STONE', 'STONE', 'DRAW !!!', 2, 2],
@@ -29,12 +37,24 @@ RSpec.describe 'janken_cli' do
       with_them do
         it "じゃんけんが実行され結果が保存される" do
 
+          # 準備
+
           $stdin = StringIO.new("#{player_1_hand_num}\n#{player_2_hand_num}")
           $stdout = StringIO.new
 
-          main
-          actual = $stdout.string
+          jankens_csv_length_before_test = count_file_lines(JANKENS_CSV)
+          janken_details_csv_length_before_test = count_file_lines(JANKEN_DETAILS_CSV)
 
+          # 実行
+
+          Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, "+09:00")) do
+            main
+          end
+
+          # 検証
+
+          # 標準出力の検証
+          actual = $stdout.string
           expected = <<~TEXT
             STONE: 0
             PAPER: 1
@@ -51,8 +71,31 @@ RSpec.describe 'janken_cli' do
 
           expect(actual).to eq expected
 
-          $stdin = STDIN
-          $stdout = STDOUT
+          # じゃんけんデータの CSV の検証
+          expected_janken_id = jankens_csv_length_before_test + 1
+          jankens_csv_rows = CSV.read(JANKENS_CSV)
+          expect(jankens_csv_rows.size).to eq expected_janken_id
+          expect(jankens_csv_rows.last).to eq [expected_janken_id.to_s, "2021-02-03 04:05:06 +0900"]
+
+          # じゃんけん明細データの CSV の検証
+          expected_janken_detail_id_1 = janken_details_csv_length_before_test + 1
+          expected_janken_detail_id_2 = janken_details_csv_length_before_test + 2
+          janken_details_csv_rows = CSV.read(JANKEN_DETAILS_CSV)
+          expect(janken_details_csv_rows.size).to eq expected_janken_detail_id_2
+          expect(janken_details_csv_rows[-2]).to eq [
+            expected_janken_detail_id_1,
+            expected_janken_id,
+            PLAYER_1_ID,
+            player_1_hand_num,
+            player_1_result_num
+          ].map(&:to_s)
+          expect(janken_details_csv_rows[-1]).to eq [
+            expected_janken_detail_id_2,
+            expected_janken_id,
+            PLAYER_2_ID,
+            player_2_hand_num,
+            player_2_result_num
+          ].map(&:to_s)
         end
       end
     end
@@ -60,13 +103,13 @@ RSpec.describe 'janken_cli' do
     describe '不正な入力' do
       where(:invalid_input) do
         [
-          ["-1"],
-          ["3"],
-          ["1.0"],
-          ["a"],
-          [""],
-          [" "],
-          ["あ"]
+          ['-1'],
+          ['3'],
+          ['1.0'],
+          ['a'],
+          [''],
+          [' '],
+          ['あ']
         ]
       end
 
@@ -100,9 +143,6 @@ RSpec.describe 'janken_cli' do
           TEXT
 
           expect(actual).to eq expected
-
-          $stdin = STDIN
-          $stdout = STDOUT
         end
       end
     end
