@@ -1,5 +1,7 @@
 # ruby-janken
 
+![badge.svg](https://github.com/os1ma/ruby-janken/workflows/workflow/badge.svg)
+
 ※ 記載しているコマンドは、全てプロジェクトのルートディレクトリで実行することを想定しています
 
 ## pre-commit の設定
