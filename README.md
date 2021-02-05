@@ -9,5 +9,5 @@ ruby ./lib/janken_cli.rb
 ## テスト
 
 ```shell
-bundle exec rspec
+./bin/test.sh
 ```
