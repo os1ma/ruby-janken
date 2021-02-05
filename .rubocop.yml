@@ -3,6 +3,10 @@ require:
 
 AllCops:
   Exclude:
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+    - '.git/**/*'
     - 'spec/spec_helper.rb'
   NewCops: enable
 
