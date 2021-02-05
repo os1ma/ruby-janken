@@ -16,6 +16,17 @@ RESULTS = {
   DRAW: 2
 }
 
+# 表示するメッセージの定義
+
+HAND_KEY_VALUE_MESSAGE_FORMAT = "%s: %s\n"
+SCAN_PROMPT_MESSAGE_FORMAT = "Please select %s hand: "
+INVALID_INPUT_MESSAGE_FORMAT = "Invalid input: %s\n\n"
+SHOW_HAND_MESSAGE_FORMAT = "%s selected %s\n";
+WINNING_MESSAGE_FORMAT = "%s win !!!\n";
+DRAW_MESSAGE = "DRAW !!!\n";
+
+# データの保存に関する定義
+
 DATA_DIR = './data'
 PLAYERS_CSV = "#{DATA_DIR}/players.csv"
 JANKENS_CSV = "#{DATA_DIR}/jankens.csv"
@@ -32,22 +43,23 @@ end
 
 def get_hand(player_name)
   loop do
-    hands_puts_str = HANDS.map { |key, value| "#{key}: #{value}" }.join("\n")
-    puts hands_puts_str
-    print "Please select #{player_name} hand: "
+    HANDS.each do |key, value|
+      printf(HAND_KEY_VALUE_MESSAGE_FORMAT, key, value)
+    end
+    printf(SCAN_PROMPT_MESSAGE_FORMAT, player_name)
 
     input = gets.chomp
 
     if valid_hand_str?(input)
       return hand_str_to_hand_symbol(input)
     else
-      puts "Invalid input: #{input}\n\n"
+      printf(INVALID_INPUT_MESSAGE_FORMAT, input)
     end
   end
 end
 
 def puts_player_hand(player_name, hand)
-  puts "#{player_name} selected #{hand}"
+  printf(SHOW_HAND_MESSAGE_FORMAT, player_name, hand)
 end
 
 def find_player_name_by_id(player_id)
@@ -140,18 +152,13 @@ end
 
 # 勝敗の表示
 
-def puts_winning_message(player_name)
-  puts "#{player_name} win !!!"
-end
-
 case player_1_result
 when :WIN
-  puts_winning_message(player_1_name)
+  printf(WINNING_MESSAGE_FORMAT, player_1_name)
 when :LOSE
-  puts_winning_message(player_2_name)
-when :LOSE
-  puts 'DRAW !!!'
+  printf(WINNING_MESSAGE_FORMAT, player_2_name)
 when :DRAW
+  printf(DRAW_MESSAGE)
 else
   raise "Invaild player_1_result. player_1_result = #{player_1_result}"
 end
