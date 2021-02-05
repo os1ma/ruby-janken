@@ -67,7 +67,9 @@ def find_player_name_by_id(player_id)
     # ID が一致する行を抽出
     .find { |row| row[0] == player_id.to_s }
     # 名前を取得
-    .at(1)
+    &.at(1) ||
+    # 存在しなければエラー
+    raise("Player not exist. player_id = #{player_id}")
 end
 
 # プレイヤー名を取得
