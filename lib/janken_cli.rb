@@ -1,6 +1,8 @@
 require 'csv'
 require 'fileutils'
 
+# 定数定義
+
 PLAYER_1_ID = 1
 PLAYER_2_ID = 2
 
@@ -32,6 +34,18 @@ PLAYERS_CSV = "#{DATA_DIR}/players.csv"
 JANKENS_CSV = "#{DATA_DIR}/jankens.csv"
 JANKEN_DETAILS_CSV = "#{DATA_DIR}/janken_details.csv"
 
+# メソッド定義
+
+def find_player_name_by_id(player_id)
+  CSV.read(PLAYERS_CSV)
+    # ID が一致する行を抽出
+    .find { |row| row[0] == player_id.to_s }
+    # 名前を取得
+    &.at(1) ||
+    # 存在しなければエラー
+    raise("Player not exist. player_id = #{player_id}")
+end
+
 def valid_hand_str?(hand_str)
   HANDS.values.map(&:to_s).include?(hand_str)
 end
@@ -62,14 +76,10 @@ def puts_player_hand(player_name, hand)
   printf(SHOW_HAND_MESSAGE_FORMAT, player_name, hand)
 end
 
-def find_player_name_by_id(player_id)
-  CSV.read(PLAYERS_CSV)
-    # ID が一致する行を抽出
-    .find { |row| row[0] == player_id.to_s }
-    # 名前を取得
-    &.at(1) ||
-    # 存在しなければエラー
-    raise("Player not exist. player_id = #{player_id}")
+def count_file_lines(file_name)
+  open(file_name, "r") do |file|
+    file.readlines.size
+  end
 end
 
 # プレイヤー名を取得
@@ -127,12 +137,6 @@ player_1_result, player_2_result =
   end
 
 # 結果を保存
-
-def count_file_lines(file_name)
-  open(file_name, "r") do |file|
-    file.readlines.size
-  end
-end
 
 FileUtils.touch(JANKENS_CSV)
 janken_id = count_file_lines(JANKENS_CSV) + 1
