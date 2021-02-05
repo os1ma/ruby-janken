@@ -2,9 +2,10 @@
 
 source 'https://rubygems.org'
 
-git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rspec', '3.10.0'
-gem 'rspec-parameterized', '0.4.2'
-gem 'timecop', '0.9.2'
-gem 'bundler-audit', '0.7.0.1'
+gem 'bundler-audit', '~> 0.7'
+gem 'rspec', '~> 3.10'
+gem 'rspec-parameterized', '~> 0.4'
+gem 'rubocop', '~> 1.9', require: false
+gem 'timecop', '~> 0.9'

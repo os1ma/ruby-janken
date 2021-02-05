@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require './lib/janken_cli'
 require 'stringio'
 require 'fileutils'
 
 RSpec.describe 'janken_cli' do
-
   before :context do
     FileUtils.touch(JANKENS_CSV)
     FileUtils.touch(JANKEN_DETAILS_CSV)
@@ -15,9 +16,7 @@ RSpec.describe 'janken_cli' do
   end
 
   describe '#main' do
-
     describe '正常な入力' do
-
       where(
         :player_1_hand_num,
         :player_2_hand_num,
@@ -41,8 +40,7 @@ RSpec.describe 'janken_cli' do
       end
 
       with_them do
-        it "じゃんけんが実行され結果が保存される" do
-
+        it 'じゃんけんが実行され結果が保存される' do
           # 準備
 
           $stdin = StringIO.new("#{player_1_hand_num}\n#{player_2_hand_num}")
@@ -53,7 +51,7 @@ RSpec.describe 'janken_cli' do
 
           # 実行
 
-          Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, "+09:00")) do
+          Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, '+09:00')) do
             main
           end
 
@@ -81,22 +79,22 @@ RSpec.describe 'janken_cli' do
           expected_janken_id = jankens_csv_length_before_test + 1
           jankens_csv_rows = CSV.read(JANKENS_CSV)
           expect(jankens_csv_rows.size).to eq expected_janken_id
-          expect(jankens_csv_rows.last).to eq [expected_janken_id.to_s, "2021-02-03 04:05:06 +0900"]
+          expect(jankens_csv_rows.last).to eq [expected_janken_id.to_s, '2021-02-03 04:05:06 +0900']
 
           # じゃんけん明細データの CSV の検証
-          expected_janken_detail_id_1 = janken_details_csv_length_before_test + 1
-          expected_janken_detail_id_2 = janken_details_csv_length_before_test + 2
+          expected_janken_detail_1_id = janken_details_csv_length_before_test + 1
+          expected_janken_detail_2_id = janken_details_csv_length_before_test + 2
           janken_details_csv_rows = CSV.read(JANKEN_DETAILS_CSV)
-          expect(janken_details_csv_rows.size).to eq expected_janken_detail_id_2
+          expect(janken_details_csv_rows.size).to eq expected_janken_detail_2_id
           expect(janken_details_csv_rows[-2]).to eq [
-            expected_janken_detail_id_1,
+            expected_janken_detail_1_id,
             expected_janken_id,
             PLAYER_1_ID,
             player_1_hand_num,
             player_1_result_num
           ].map(&:to_s)
           expect(janken_details_csv_rows[-1]).to eq [
-            expected_janken_detail_id_2,
+            expected_janken_detail_2_id,
             expected_janken_id,
             PLAYER_2_ID,
             player_2_hand_num,
@@ -120,8 +118,7 @@ RSpec.describe 'janken_cli' do
       end
 
       with_them do
-        it "再入力が促される" do
-
+        it '再入力が促される' do
           $stdin = StringIO.new("#{invalid_input}\n0\n0")
           $stdout = StringIO.new
 

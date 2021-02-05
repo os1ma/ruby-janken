@@ -1,0 +1,20 @@
+AllCops:
+  Exclude:
+    - 'spec/spec_helper.rb'
+  NewCops: enable
+
+# 日本語のコメントを許可
+Style/AsciiComments:
+  Enabled: false
+
+# 一時的に追加
+Metrics/AbcSize:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false

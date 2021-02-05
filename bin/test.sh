@@ -10,6 +10,9 @@ readonly PROJECT_HOME="${SCRIPT_DIR}/.."
 
 cd "${PROJECT_HOME}"
 
+# スタイルチェック
+bundle exec rubocop
+
 # RSpec のテスト
 bundle exec rspec
 
