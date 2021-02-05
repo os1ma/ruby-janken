@@ -94,11 +94,15 @@ player_1_result =
     raise "Invalid player_1_hand. player_1_hand = #{player_1_hand}"
   end
 
+def puts_winning_message(player_name)
+  puts "#{player_name} win !!!"
+end
+
 case player_1_result
 when :WIN
-  puts "#{player_1_name} win !!!"
+  puts_winning_message(player_1_name)
 when :LOSE
-  puts "#{player_2_name} win !!!"
+  puts_winning_message(player_2_name)
 when :LOSE
   puts 'DRAW !!!'
 when :DRAW
