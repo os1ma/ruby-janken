@@ -1,11 +1,13 @@
+require 'csv'
+
 HANDS = {
   STONE: 0,
   PAPER: 1,
   SCISSORS: 2
 }
 
-PLAYER_1_NAME = 'Alice'
-PLAYER_2_NAME = 'Bob'
+PLAYER_1_ID = 1
+PLAYER_2_ID = 2
 
 def valid_hand_str?(hand_str)
   HANDS.values.map(&:to_s).include?(hand_str)
@@ -36,11 +38,22 @@ def puts_player_hand(player_name, hand)
   puts "#{player_name} selected #{hand}"
 end
 
-player_1_hand = get_hand(PLAYER_1_NAME)
-player_2_hand = get_hand(PLAYER_2_NAME)
+def find_player_name_by_id(player_id)
+  CSV.read('./data/players.csv')
+    # ID が一致する行を抽出
+    .find { |row| row[0] == player_id.to_s }
+    # 名前を取得
+    .at(1)
+end
 
-puts_player_hand(PLAYER_1_NAME, player_1_hand)
-puts_player_hand(PLAYER_2_NAME, player_2_hand)
+player_1_name = find_player_name_by_id(PLAYER_1_ID)
+player_2_name = find_player_name_by_id(PLAYER_2_ID)
+
+player_1_hand = get_hand(player_1_name)
+player_2_hand = get_hand(player_2_name)
+
+puts_player_hand(player_1_name, player_1_hand)
+puts_player_hand(player_2_name, player_2_hand)
 
 player_1_result =
   case player_1_hand
@@ -83,9 +96,9 @@ player_1_result =
 
 case player_1_result
 when :WIN
-  puts "#{PLAYER_1_NAME} win !!!"
+  puts "#{player_1_name} win !!!"
 when :LOSE
-  puts "#{PLAYER_2_NAME} win !!!"
+  puts "#{player_2_name} win !!!"
 when :LOSE
   puts 'DRAW !!!'
 when :DRAW
