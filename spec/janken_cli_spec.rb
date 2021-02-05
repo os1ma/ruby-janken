@@ -1,7 +1,13 @@
 require './lib/janken_cli'
 require 'stringio'
+require 'fileutils'
 
 RSpec.describe 'janken_cli' do
+
+  before :context do
+    FileUtils.touch(JANKENS_CSV)
+    FileUtils.touch(JANKEN_DETAILS_CSV)
+  end
 
   after :context do
     $stdin = STDIN
