@@ -5,14 +5,13 @@ require 'stringio'
 require 'fileutils'
 
 RSpec.describe 'janken_cli' do
-  before :context do
+  before do
     FileUtils.touch(JANKENS_CSV)
     FileUtils.touch(JANKEN_DETAILS_CSV)
   end
 
-  after :context do
+  after do
     $stdin = STDIN
-    $stdout = STDOUT
   end
 
   describe '#main' do
@@ -42,23 +41,12 @@ RSpec.describe 'janken_cli' do
       with_them do
         it 'じゃんけんが実行され結果が保存される' do
           # 準備
-
           $stdin = StringIO.new("#{player_1_hand_num}\n#{player_2_hand_num}")
-          $stdout = StringIO.new
 
           jankens_csv_length_before_test = count_file_lines(JANKENS_CSV)
           janken_details_csv_length_before_test = count_file_lines(JANKEN_DETAILS_CSV)
 
-          # 実行
-
-          Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, '+09:00')) do
-            main
-          end
-
-          # 検証
-
-          # 標準出力の検証
-          actual = $stdout.string
+          # 実行と標準出力の検証
           expected = <<~TEXT
             STONE: 0
             PAPER: 1
@@ -73,7 +61,11 @@ RSpec.describe 'janken_cli' do
             #{result_message}
           TEXT
 
-          expect(actual).to eq expected
+          expect do
+            Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, '+09:00')) do
+              main
+            end
+          end.to output(expected).to_stdout
 
           # じゃんけんデータの CSV の検証
           expected_janken_id = jankens_csv_length_before_test + 1
@@ -120,10 +112,6 @@ RSpec.describe 'janken_cli' do
       with_them do
         it '再入力が促される' do
           $stdin = StringIO.new("#{invalid_input}\n0\n0")
-          $stdout = StringIO.new
-
-          main
-          actual = $stdout.string
 
           expected = <<~TEXT
             STONE: 0
@@ -145,7 +133,9 @@ RSpec.describe 'janken_cli' do
             DRAW !!!
           TEXT
 
-          expect(actual).to eq expected
+          expect do
+            main
+          end.to output(expected).to_stdout
         end
       end
     end
