@@ -82,7 +82,7 @@ def count_file_lines(file_name)
   end
 end
 
-def main
+def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
   # プレイヤー名を取得
 
   player_1_name = find_player_name_by_id(PLAYER_1_ID)

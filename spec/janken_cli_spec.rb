@@ -4,7 +4,41 @@ require './lib/janken_cli'
 require 'stringio'
 require 'fileutils'
 
-RSpec.describe 'janken_cli' do
+VALID_INPUT_EXPECTED_TEXT = <<~TEXT
+  STONE: 0
+  PAPER: 1
+  SCISSORS: 2
+  Please select Alice hand:
+  STONE: 0
+  PAPER: 1
+  SCISSORS: 2
+  Please select Bob hand:
+  Alice selected %s
+  Bob selected %s
+  %s
+TEXT
+
+INVALID_INPUT_EXPECTED_TEXT = <<~TEXT
+  STONE: 0
+  PAPER: 1
+  SCISSORS: 2
+  Please select Alice hand:
+  Invalid input: %s
+
+  STONE: 0
+  PAPER: 1
+  SCISSORS: 2
+  Please select Alice hand:
+  STONE: 0
+  PAPER: 1
+  SCISSORS: 2
+  Please select Bob hand:
+  Alice selected STONE
+  Bob selected STONE
+  DRAW !!!
+TEXT
+
+RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/DescribeClass
   before do
     FileUtils.touch(JANKENS_CSV)
     FileUtils.touch(JANKEN_DETAILS_CSV)
@@ -14,8 +48,8 @@ RSpec.describe 'janken_cli' do
     $stdin = STDIN
   end
 
-  describe '#main' do
-    describe '正常な入力' do
+  describe '#main' do # rubocop:disable Metrics/BlockLength
+    describe '正常な入力' do # rubocop:disable Metrics/BlockLength
       where(
         :player_1_hand_num,
         :player_2_hand_num,
@@ -38,8 +72,8 @@ RSpec.describe 'janken_cli' do
         ]
       end
 
-      with_them do
-        it 'じゃんけんが実行され結果が保存される' do
+      with_them do # rubocop:disable Metrics/BlockLength
+        it 'じゃんけんが実行され結果が保存される' do # rubocop:disable Metrics/BlockLength, RSpec/ExampleLength, RSpec/MultipleExpectations
           # 準備
           $stdin = StringIO.new("#{player_1_hand_num}\n#{player_2_hand_num}")
 
@@ -47,19 +81,7 @@ RSpec.describe 'janken_cli' do
           janken_details_csv_length_before_test = count_file_lines(JANKEN_DETAILS_CSV)
 
           # 実行と標準出力の検証
-          expected = <<~TEXT
-            STONE: 0
-            PAPER: 1
-            SCISSORS: 2
-            Please select Alice hand:
-            STONE: 0
-            PAPER: 1
-            SCISSORS: 2
-            Please select Bob hand:
-            Alice selected #{player_1_hand_name}
-            Bob selected #{player_2_hand_name}
-            #{result_message}
-          TEXT
+          expected = format(VALID_INPUT_EXPECTED_TEXT, player_1_hand_name, player_2_hand_name, result_message)
 
           expect do
             Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, '+09:00')) do
@@ -113,25 +135,7 @@ RSpec.describe 'janken_cli' do
         it '再入力が促される' do
           $stdin = StringIO.new("#{invalid_input}\n0\n0")
 
-          expected = <<~TEXT
-            STONE: 0
-            PAPER: 1
-            SCISSORS: 2
-            Please select Alice hand:
-            Invalid input: #{invalid_input}
-
-            STONE: 0
-            PAPER: 1
-            SCISSORS: 2
-            Please select Alice hand:
-            STONE: 0
-            PAPER: 1
-            SCISSORS: 2
-            Please select Bob hand:
-            Alice selected STONE
-            Bob selected STONE
-            DRAW !!!
-          TEXT
+          expected = format(INVALID_INPUT_EXPECTED_TEXT, invalid_input)
 
           expect do
             main

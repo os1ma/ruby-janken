@@ -13,23 +13,3 @@ AllCops:
 # 日本語のコメントを許可
 Style/AsciiComments:
   Enabled: false
-
-# 一時的に追加
-Metrics/AbcSize:
-  Enabled: false
-Metrics/BlockLength:
-  Enabled: false
-Metrics/CyclomaticComplexity:
-  Enabled: false
-Metrics/MethodLength:
-  Enabled: false
-Metrics/PerceivedComplexity:
-  Enabled: false
-
-# 一時的に追加
-RSpec/DescribeClass:
-  Enabled: false
-RSpec/ExampleLength:
-  Enabled: false
-RSpec/MultipleExpectations:
-  Enabled: false
