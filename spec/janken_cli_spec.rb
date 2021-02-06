@@ -38,6 +38,12 @@ INVALID_INPUT_EXPECTED_TEXT = <<~TEXT
   DRAW !!!
 TEXT
 
+def count_file_lines(file_name)
+  File.open(file_name, 'r') do |file|
+    file.readlines.size
+  end
+end
+
 RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/DescribeClass
   before do
     FileUtils.touch(JANKENS_CSV)
