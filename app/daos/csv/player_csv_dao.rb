@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'csv'
-require './app/daos/csv/dao_config'
+require './app/daos/csv/csv_dao_utils'
 
-# プレイヤーサービス
+# プレイヤーを CSV で読み書きする DAO
 class PlayerCsvDao
-  PLAYERS_CSV = "#{DaoConfig::DATA_DIR}/players.csv"
+  PLAYERS_CSV = "#{CsvDaoUtils::DATA_DIR}/players.csv"
 
   def find_player_by_id(player_id)
     CSV.read(PLAYERS_CSV)
