@@ -2,17 +2,12 @@
 
 require 'csv'
 require 'fileutils'
+require './lib/hand'
 
 # 定数定義
 
 PLAYER_1_ID = 1
 PLAYER_2_ID = 2
-
-HANDS = {
-  STONE: 0,
-  PAPER: 1,
-  SCISSORS: 2
-}.freeze
 
 RESULTS = {
   WIN: 0,
@@ -22,7 +17,7 @@ RESULTS = {
 
 # 表示するメッセージの定義
 
-HAND_KEY_VALUE_MESSAGE_FORMAT = "%s: %s\n"
+HAND_NAME_NUMBER_MESSAGE_FORMAT = "%s: %s\n"
 SCAN_PROMPT_MESSAGE_FORMAT = "Please select %s hand:\n"
 INVALID_INPUT_MESSAGE_FORMAT = "Invalid input: %s\n\n"
 SHOW_HAND_MESSAGE_FORMAT = "%s selected %s\n"
@@ -48,32 +43,23 @@ def find_player_name_by_id(player_id)
     raise("Player not exist. player_id = #{player_id}")
 end
 
-def valid_hand_str?(hand_str)
-  HANDS.values.map(&:to_s).include?(hand_str)
-end
-
-def hand_str_to_hand_symbol(hand_str)
-  hand_num = hand_str.to_i
-  HANDS.detect { |_, value| value == hand_num }[0]
-end
-
 def get_hand(player_name)
   loop do
-    HANDS.each do |key, value|
-      printf(HAND_KEY_VALUE_MESSAGE_FORMAT, key, value)
+    Hand.elements.each do |h|
+      printf(HAND_NAME_NUMBER_MESSAGE_FORMAT, h.name, h.number)
     end
     printf(SCAN_PROMPT_MESSAGE_FORMAT, player_name)
 
     input = gets.chomp
 
-    return hand_str_to_hand_symbol(input) if valid_hand_str?(input)
+    return Hand.value_of_num_string(input) if Hand.valid_hand_num_string?(input)
 
     printf(INVALID_INPUT_MESSAGE_FORMAT, input)
   end
 end
 
 def puts_player_hand(player_name, hand)
-  printf(SHOW_HAND_MESSAGE_FORMAT, player_name, hand)
+  printf(SHOW_HAND_MESSAGE_FORMAT, player_name, hand.name)
 end
 
 def count_file_lines(file_name)
@@ -100,35 +86,35 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
 
   player_1_result, player_2_result =
     case player_1_hand
-    when :STONE
+    when Hand::STONE
       case player_2_hand
-      when :STONE
+      when Hand::STONE
         %i[DRAW DRAW]
-      when :PAPER
+      when Hand::PAPER
         %i[LOSE WIN]
-      when :SCISSORS
+      when Hand::SCISSORS
         %i[WIN LOSE]
       else
         raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
       end
-    when :PAPER
+    when Hand::PAPER
       case player_2_hand
-      when :STONE
+      when Hand::STONE
         %i[WIN LOSE]
-      when :PAPER
+      when Hand::PAPER
         %i[DRAW DRAW]
-      when :SCISSORS
+      when Hand::SCISSORS
         %i[LOSE WIN]
       else
         raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
       end
-    when :SCISSORS
+    when Hand::SCISSORS
       case player_2_hand
-      when :STONE
+      when Hand::STONE
         %i[LOSE WIN]
-      when :PAPER
+      when Hand::PAPER
         %i[WIN LOSE]
-      when :SCISSORS
+      when Hand::SCISSORS
         %i[DRAW DRAW]
       else
         raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
@@ -153,8 +139,8 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
   janken_detail_2_id = janken_details_count + 2
 
   CSV.open(JANKEN_DETAILS_CSV, 'a') do |csv|
-    csv << [janken_detail_1_id, janken_id, PLAYER_1_ID, HANDS[player_1_hand], RESULTS[player_1_result]]
-    csv << [janken_detail_2_id, janken_id, PLAYER_2_ID, HANDS[player_2_hand], RESULTS[player_2_result]]
+    csv << [janken_detail_1_id, janken_id, PLAYER_1_ID, player_1_hand.number, RESULTS[player_1_result]]
+    csv << [janken_detail_2_id, janken_id, PLAYER_2_ID, player_2_hand.number, RESULTS[player_2_result]]
   end
 
   # 勝敗の表示
