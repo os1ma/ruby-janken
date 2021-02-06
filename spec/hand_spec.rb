@@ -24,7 +24,7 @@ RSpec.describe Hand do # rubocop:disable Metrics/BlockLength
       end
 
       with_them do
-        it '正常な値' do
+        it '正常と判定される' do
           actual = described_class.valid_hand_num_string?(num_str)
           expect(actual).to be_truthy
         end
@@ -45,7 +45,7 @@ RSpec.describe Hand do # rubocop:disable Metrics/BlockLength
       end
 
       with_them do
-        it '正常な値' do
+        it '不正と判定される' do
           actual = described_class.valid_hand_num_string?(num_str)
           expect(actual).to be_falsey
         end
@@ -64,7 +64,7 @@ RSpec.describe Hand do # rubocop:disable Metrics/BlockLength
       end
 
       with_them do
-        it '正常な値' do
+        it '期待する手を返す' do
           actual = described_class.value_of_num_string(num_str).name
           expect(actual).to eq expected_name
         end
@@ -85,7 +85,7 @@ RSpec.describe Hand do # rubocop:disable Metrics/BlockLength
       end
 
       with_them do
-        it '正常な値' do
+        it '例外が発生する' do
           expect do
             described_class.value_of_num_string(num_str).name
           end.to raise_error RuntimeError
