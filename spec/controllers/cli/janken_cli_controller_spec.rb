@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require './app/controllers/cli/janken_cli_controller'
+require './app/services/janken_service'
 require 'stringio'
 require 'fileutils'
 
@@ -46,8 +47,8 @@ end
 
 RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
   before do
-    FileUtils.touch(JankenCliController::JANKENS_CSV)
-    FileUtils.touch(JankenCliController::JANKEN_DETAILS_CSV)
+    FileUtils.touch(JankenService::JANKENS_CSV)
+    FileUtils.touch(JankenService::JANKEN_DETAILS_CSV)
   end
 
   after do
@@ -83,8 +84,8 @@ RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
           # 準備
           $stdin = StringIO.new("#{player1_hand_num}\n#{player2_hand_num}")
 
-          jankens_csv_length_before_test = count_file_lines(JankenCliController::JANKENS_CSV)
-          janken_details_csv_length_before_test = count_file_lines(JankenCliController::JANKEN_DETAILS_CSV)
+          jankens_csv_length_before_test = count_file_lines(JankenService::JANKENS_CSV)
+          janken_details_csv_length_before_test = count_file_lines(JankenService::JANKEN_DETAILS_CSV)
 
           # 実行と標準出力の検証
           expected = format(VALID_INPUT_EXPECTED_TEXT, player1_hand_name, player2_hand_name, result_message)
@@ -97,14 +98,14 @@ RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
 
           # じゃんけんデータの CSV の検証
           expected_janken_id = jankens_csv_length_before_test + 1
-          jankens_csv_rows = CSV.read(JankenCliController::JANKENS_CSV)
+          jankens_csv_rows = CSV.read(JankenService::JANKENS_CSV)
           expect(jankens_csv_rows.size).to eq expected_janken_id
           expect(jankens_csv_rows.last).to eq [expected_janken_id.to_s, '2021-02-03 04:05:06 +0900']
 
           # じゃんけん明細データの CSV の検証
           expected_janken_detail1_id = janken_details_csv_length_before_test + 1
           expected_janken_detail2_id = janken_details_csv_length_before_test + 2
-          janken_details_csv_rows = CSV.read(JankenCliController::JANKEN_DETAILS_CSV)
+          janken_details_csv_rows = CSV.read(JankenService::JANKEN_DETAILS_CSV)
           expect(janken_details_csv_rows.size).to eq expected_janken_detail2_id
           expect(janken_details_csv_rows[-2]).to eq [
             expected_janken_detail1_id,
