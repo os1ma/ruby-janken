@@ -5,6 +5,8 @@ require 'fileutils'
 require './lib/hand'
 require './lib/result'
 require './lib/player'
+require './lib/janken'
+require './lib/janken_detail'
 
 # 定数定義
 
@@ -59,6 +61,20 @@ end
 def count_file_lines(file_name)
   File.open(file_name, 'r') do |file|
     file.readlines.size
+  end
+end
+
+def save_janken(janken)
+  CSV.open(JANKENS_CSV, 'a') do |csv|
+    csv << [janken.id, janken.played_at]
+  end
+end
+
+def save_janken_details(janken_details)
+  CSV.open(JANKEN_DETAILS_CSV, 'a') do |csv|
+    janken_details.each do |jd|
+      csv << [jd.id, jd.janken_id, jd.player_id, jd.hand.number, jd.result.number]
+    end
   end
 end
 
@@ -122,20 +138,16 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
   FileUtils.touch(JANKENS_CSV)
   janken_id = count_file_lines(JANKENS_CSV) + 1
   played_at = Time.now
-
-  CSV.open(JANKENS_CSV, 'a') do |csv|
-    csv << [janken_id, played_at]
-  end
+  janken = Janken.new(janken_id, played_at)
+  save_janken(janken)
 
   FileUtils.touch(JANKEN_DETAILS_CSV)
   janken_details_count = count_file_lines(JANKEN_DETAILS_CSV)
-  janken_detail_1_id = janken_details_count + 1
-  janken_detail_2_id = janken_details_count + 2
-
-  CSV.open(JANKEN_DETAILS_CSV, 'a') do |csv|
-    csv << [janken_detail_1_id, janken_id, PLAYER1_ID, player1_hand.number, player1_result.number]
-    csv << [janken_detail_2_id, janken_id, PLAYER2_ID, player2_hand.number, player2_result.number]
-  end
+  janken_detail1_id = janken_details_count + 1
+  janken_detail2_id = janken_details_count + 2
+  janken_detail1 = JankenDetail.new(janken_detail1_id, janken_id, player1.id, player1_hand, player1_result)
+  janken_detail2 = JankenDetail.new(janken_detail2_id, janken_id, player2.id, player2_hand, player2_result)
+  save_janken_details([janken_detail1, janken_detail2])
 
   # 勝敗の表示
 

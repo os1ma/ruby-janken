@@ -96,19 +96,19 @@ RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/Desc
           expect(jankens_csv_rows.last).to eq [expected_janken_id.to_s, '2021-02-03 04:05:06 +0900']
 
           # じゃんけん明細データの CSV の検証
-          expected_janken_detail_1_id = janken_details_csv_length_before_test + 1
-          expected_janken_detail_2_id = janken_details_csv_length_before_test + 2
+          expected_janken_detail1_id = janken_details_csv_length_before_test + 1
+          expected_janken_detail2_id = janken_details_csv_length_before_test + 2
           janken_details_csv_rows = CSV.read(JANKEN_DETAILS_CSV)
-          expect(janken_details_csv_rows.size).to eq expected_janken_detail_2_id
+          expect(janken_details_csv_rows.size).to eq expected_janken_detail2_id
           expect(janken_details_csv_rows[-2]).to eq [
-            expected_janken_detail_1_id,
+            expected_janken_detail1_id,
             expected_janken_id,
             PLAYER1_ID,
             player1_hand_num,
             player1_result_num
           ].map(&:to_s)
           expect(janken_details_csv_rows[-1]).to eq [
-            expected_janken_detail_2_id,
+            expected_janken_detail2_id,
             expected_janken_id,
             PLAYER2_ID,
             player2_hand_num,
