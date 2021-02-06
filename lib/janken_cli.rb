@@ -3,17 +3,12 @@
 require 'csv'
 require 'fileutils'
 require './lib/hand'
+require './lib/result'
 
 # 定数定義
 
 PLAYER_1_ID = 1
 PLAYER_2_ID = 2
-
-RESULTS = {
-  WIN: 0,
-  LOSE: 1,
-  DRAW: 2
-}.freeze
 
 # 表示するメッセージの定義
 
@@ -45,7 +40,7 @@ end
 
 def get_hand(player_name)
   loop do
-    Hand.elements.each do |h|
+    Hand.all.each do |h|
       printf(HAND_NAME_NUMBER_MESSAGE_FORMAT, h.name, h.number)
     end
     printf(SCAN_PROMPT_MESSAGE_FORMAT, player_name)
@@ -89,33 +84,33 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
     when Hand::STONE
       case player_2_hand
       when Hand::STONE
-        %i[DRAW DRAW]
+        [Result::DRAW, Result::DRAW]
       when Hand::PAPER
-        %i[LOSE WIN]
+        [Result::LOSE, Result::WIN]
       when Hand::SCISSORS
-        %i[WIN LOSE]
+        [Result::WIN, Result::LOSE]
       else
         raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
       end
     when Hand::PAPER
       case player_2_hand
       when Hand::STONE
-        %i[WIN LOSE]
+        [Result::WIN, Result::LOSE]
       when Hand::PAPER
-        %i[DRAW DRAW]
+        [Result::DRAW, Result::DRAW]
       when Hand::SCISSORS
-        %i[LOSE WIN]
+        [Result::LOSE, Result::WIN]
       else
         raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
       end
     when Hand::SCISSORS
       case player_2_hand
       when Hand::STONE
-        %i[LOSE WIN]
+        [Result::LOSE, Result::WIN]
       when Hand::PAPER
-        %i[WIN LOSE]
+        [Result::WIN, Result::LOSE]
       when Hand::SCISSORS
-        %i[DRAW DRAW]
+        [Result::DRAW, Result::DRAW]
       else
         raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
       end
@@ -139,18 +134,18 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
   janken_detail_2_id = janken_details_count + 2
 
   CSV.open(JANKEN_DETAILS_CSV, 'a') do |csv|
-    csv << [janken_detail_1_id, janken_id, PLAYER_1_ID, player_1_hand.number, RESULTS[player_1_result]]
-    csv << [janken_detail_2_id, janken_id, PLAYER_2_ID, player_2_hand.number, RESULTS[player_2_result]]
+    csv << [janken_detail_1_id, janken_id, PLAYER_1_ID, player_1_hand.number, player_1_result.number]
+    csv << [janken_detail_2_id, janken_id, PLAYER_2_ID, player_2_hand.number, player_2_result.number]
   end
 
   # 勝敗の表示
 
   case player_1_result
-  when :WIN
+  when Result::WIN
     printf(WINNING_MESSAGE_FORMAT, player_1_name)
-  when :LOSE
+  when Result::LOSE
     printf(WINNING_MESSAGE_FORMAT, player_2_name)
-  when :DRAW
+  when Result::DRAW
     printf(DRAW_MESSAGE)
   else
     raise "Invaild player_1_result. player_1_result = #{player_1_result}"

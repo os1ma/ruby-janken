@@ -23,17 +23,17 @@ module Hand
 
   class << self
     def valid_hand_num_string?(str)
-      elements.map(&:number).map(&:to_s).include?(str)
+      all.map(&:number).map(&:to_s).include?(str)
     end
 
     def value_of_num_string(str)
       raise "Invalid string for hand num. str = #{str}" unless valid_hand_num_string?(str)
 
       hand_num = str.to_i
-      elements.detect { |h| h.number == hand_num }
+      all.detect { |h| h.number == hand_num }
     end
 
-    def elements
+    def all
       [STONE, PAPER, SCISSORS]
     end
   end
