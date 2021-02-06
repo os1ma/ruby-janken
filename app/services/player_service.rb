@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-require 'csv'
+require './app/daos/csv/player_csv_dao'
 
 # プレイヤーサービス
 class PlayerService
-  DATA_DIR = './data'
-  PLAYERS_CSV = "#{DATA_DIR}/players.csv"
+  def initialize
+    @player_dao = PlayerCsvDao.new
+  end
 
   def find_player_by_id(player_id)
-    CSV.read(PLAYERS_CSV)
-       .map { |r| Player.new(r[0].to_i, r[1]) }
-       .find { |p| p.id == player_id }
+    @player_dao.find_player_by_id(player_id)
   end
 end
