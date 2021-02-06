@@ -8,34 +8,35 @@ require './app/models/result'
 require './app/models/player'
 require './app/models/janken'
 require './app/models/janken_detail'
-
-# 定数定義
-
-PLAYER1_ID = 1
-PLAYER2_ID = 2
-
-# View ファイルの定義
-
-VIEW_DIR = './app/views/cli'
-SCAN_PROMPT_VIEW_TEMPLATE = "#{VIEW_DIR}/scan_prompt.txt.erb"
-INVALID_INPUT_VIEW_TEMPLATE = "#{VIEW_DIR}/invalid_input.txt.erb"
-SHOW_HAND_VIEW_TEMPLATE = "#{VIEW_DIR}/show_hand.txt.erb"
-RESULT_VIEW_TEMPLATE = "#{VIEW_DIR}/result.txt.erb"
-
-# データの保存に関する定義
-
-DATA_DIR = './data'
-PLAYERS_CSV = "#{DATA_DIR}/players.csv"
-JANKENS_CSV = "#{DATA_DIR}/jankens.csv"
-JANKEN_DETAILS_CSV = "#{DATA_DIR}/janken_details.csv"
+require './app/services/player_service'
 
 # じゃんけんの CLI のコントローラ
 class JankenCliController # rubocop:disable Metrics/ClassLength
+  # 定数定義
+  PLAYER1_ID = 1
+  PLAYER2_ID = 2
+
+  # View ファイルの定義
+  VIEW_DIR = './app/views/cli'
+  SCAN_PROMPT_VIEW_TEMPLATE = "#{VIEW_DIR}/scan_prompt.txt.erb"
+  INVALID_INPUT_VIEW_TEMPLATE = "#{VIEW_DIR}/invalid_input.txt.erb"
+  SHOW_HAND_VIEW_TEMPLATE = "#{VIEW_DIR}/show_hand.txt.erb"
+  RESULT_VIEW_TEMPLATE = "#{VIEW_DIR}/result.txt.erb"
+
+  # データの保存に関する定義
+  DATA_DIR = './data'
+  JANKENS_CSV = "#{DATA_DIR}/jankens.csv"
+  JANKEN_DETAILS_CSV = "#{DATA_DIR}/janken_details.csv"
+
+  def initialize
+    @player_service = PlayerService.new
+  end
+
   def play # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
     # プレイヤー名を取得
 
-    player1 = find_player_by_id(PLAYER1_ID)
-    player2 = find_player_by_id(PLAYER2_ID)
+    player1 = @player_service.find_player_by_id(PLAYER1_ID)
+    player2 = @player_service.find_player_by_id(PLAYER2_ID)
 
     # プレイヤーの手を取得
 
@@ -120,14 +121,6 @@ class JankenCliController # rubocop:disable Metrics/ClassLength
   end
 
   private
-
-  def find_player_by_id(player_id)
-    CSV.read(PLAYERS_CSV)
-       .map { |r| Player.new(r[0].to_i, r[1]) }
-       .find { |p| p.id == player_id } ||
-      # 存在しなければエラー
-      raise("Player not exist. player_id = #{player_id}")
-  end
 
   def get_hand(player)
     loop do
