@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './app/janken_cli'
+require './app/controllers/cli/janken_cli_controller'
 require 'stringio'
 require 'fileutils'
 
@@ -44,7 +44,7 @@ def count_file_lines(file_name)
   end
 end
 
-RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/DescribeClass
+RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
   before do
     FileUtils.touch(JANKENS_CSV)
     FileUtils.touch(JANKEN_DETAILS_CSV)
@@ -91,7 +91,7 @@ RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/Desc
 
           expect do
             Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, '+09:00')) do
-              main
+              described_class.new.play
             end
           end.to output(expected).to_stdout
 
@@ -144,7 +144,7 @@ RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/Desc
           expected = format(INVALID_INPUT_EXPECTED_TEXT, invalid_input)
 
           expect do
-            main
+            described_class.new.play
           end.to output(expected).to_stdout
         end
       end
