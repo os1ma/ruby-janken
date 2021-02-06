@@ -2,6 +2,7 @@
 
 require 'csv'
 require 'fileutils'
+require './app/views/cli/standard_output_view'
 require './app/models/hand'
 require './app/models/result'
 require './app/models/player'
@@ -13,14 +14,13 @@ require './app/models/janken_detail'
 PLAYER1_ID = 1
 PLAYER2_ID = 2
 
-# 表示するメッセージの定義
+# View ファイルの定義
 
-HAND_NAME_NUMBER_MESSAGE_FORMAT = "%s: %s\n"
-SCAN_PROMPT_MESSAGE_FORMAT = "Please select %s hand:\n"
-INVALID_INPUT_MESSAGE_FORMAT = "Invalid input: %s\n\n"
-SHOW_HAND_MESSAGE_FORMAT = "%s selected %s\n"
-WINNING_MESSAGE_FORMAT = "%s win !!!\n"
-DRAW_MESSAGE = "DRAW !!!\n"
+VIEW_DIR = './app/views/cli'
+SCAN_PROMPT_VIEW_TEMPLATE = "#{VIEW_DIR}/scan_prompt.txt.erb"
+INVALID_INPUT_VIEW_TEMPLATE = "#{VIEW_DIR}/invalid_input.txt.erb"
+SHOW_HAND_VIEW_TEMPLATE = "#{VIEW_DIR}/show_hand.txt.erb"
+RESULT_VIEW_TEMPLATE = "#{VIEW_DIR}/result.txt.erb"
 
 # データの保存に関する定義
 
@@ -41,21 +41,18 @@ end
 
 def get_hand(player)
   loop do
-    Hand.all.each do |h|
-      printf(HAND_NAME_NUMBER_MESSAGE_FORMAT, h.name, h.number)
-    end
-    printf(SCAN_PROMPT_MESSAGE_FORMAT, player.name)
+    StandardOutputView.new(SCAN_PROMPT_VIEW_TEMPLATE, hands: Hand.all, player: player).show
 
     input = gets.chomp
 
     return Hand.value_of_num_string(input) if Hand.valid_hand_num_string?(input)
 
-    printf(INVALID_INPUT_MESSAGE_FORMAT, input)
+    StandardOutputView.new(INVALID_INPUT_VIEW_TEMPLATE, input: input).show
   end
 end
 
 def puts_player_hand(player, hand)
-  printf(SHOW_HAND_MESSAGE_FORMAT, player.name, hand.name)
+  StandardOutputView.new(SHOW_HAND_VIEW_TEMPLATE, player: player, hand: hand).show
 end
 
 def count_file_lines(file_name)
@@ -151,16 +148,19 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
 
   # 勝敗の表示
 
-  case player1_result
-  when Result::WIN
-    printf(WINNING_MESSAGE_FORMAT, player1.name)
-  when Result::LOSE
-    printf(WINNING_MESSAGE_FORMAT, player2.name)
-  when Result::DRAW
-    printf(DRAW_MESSAGE)
-  else
-    raise "Invaild player1_result. player1_result = #{player1_result}"
-  end
+  winner =
+    case player1_result
+    when Result::WIN
+      player1
+    when Result::LOSE
+      player2
+    when Result::DRAW
+      nil
+    else
+      raise "Invaild player1_result. player1_result = #{player1_result}"
+    end
+
+  StandardOutputView.new(RESULT_VIEW_TEMPLATE, winner: winner).show
 end
 
 main if __FILE__ == $PROGRAM_NAME

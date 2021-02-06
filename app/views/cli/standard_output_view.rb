@@ -11,6 +11,6 @@ class StandardOutputView
 
   def show
     template_str = File.open(@template, 'r').readlines.join
-    puts ERB.new(template_str).result_with_hash(@params)
+    puts ERB.new(template_str, trim_mode: '<>').result_with_hash(@params)
   end
 end
