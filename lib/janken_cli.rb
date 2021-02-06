@@ -4,11 +4,12 @@ require 'csv'
 require 'fileutils'
 require './lib/hand'
 require './lib/result'
+require './lib/player'
 
 # 定数定義
 
-PLAYER_1_ID = 1
-PLAYER_2_ID = 2
+PLAYER1_ID = 1
+PLAYER2_ID = 2
 
 # 表示するメッセージの定義
 
@@ -28,22 +29,20 @@ JANKEN_DETAILS_CSV = "#{DATA_DIR}/janken_details.csv"
 
 # メソッド定義
 
-def find_player_name_by_id(player_id)
+def find_player_by_id(player_id)
   CSV.read(PLAYERS_CSV)
-     # ID が一致する行を抽出
-     .find { |row| row[0] == player_id.to_s }
-     # 名前を取得
-     &.at(1) ||
+     .map { |r| Player.new(r[0].to_i, r[1]) }
+     .find { |p| p.id == player_id } ||
     # 存在しなければエラー
     raise("Player not exist. player_id = #{player_id}")
 end
 
-def get_hand(player_name)
+def get_hand(player)
   loop do
     Hand.all.each do |h|
       printf(HAND_NAME_NUMBER_MESSAGE_FORMAT, h.name, h.number)
     end
-    printf(SCAN_PROMPT_MESSAGE_FORMAT, player_name)
+    printf(SCAN_PROMPT_MESSAGE_FORMAT, player.name)
 
     input = gets.chomp
 
@@ -53,8 +52,8 @@ def get_hand(player_name)
   end
 end
 
-def puts_player_hand(player_name, hand)
-  printf(SHOW_HAND_MESSAGE_FORMAT, player_name, hand.name)
+def puts_player_hand(player, hand)
+  printf(SHOW_HAND_MESSAGE_FORMAT, player.name, hand.name)
 end
 
 def count_file_lines(file_name)
@@ -66,23 +65,23 @@ end
 def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
   # プレイヤー名を取得
 
-  player_1_name = find_player_name_by_id(PLAYER_1_ID)
-  player_2_name = find_player_name_by_id(PLAYER_2_ID)
+  player1 = find_player_by_id(PLAYER1_ID)
+  player2 = find_player_by_id(PLAYER2_ID)
 
   # プレイヤーの手を取得
 
-  player_1_hand = get_hand(player_1_name)
-  player_2_hand = get_hand(player_2_name)
+  player1_hand = get_hand(player1)
+  player2_hand = get_hand(player2)
 
-  puts_player_hand(player_1_name, player_1_hand)
-  puts_player_hand(player_2_name, player_2_hand)
+  puts_player_hand(player1, player1_hand)
+  puts_player_hand(player2, player2_hand)
 
   # 勝敗判定
 
-  player_1_result, player_2_result =
-    case player_1_hand
+  player1_result, player2_result =
+    case player1_hand
     when Hand::STONE
-      case player_2_hand
+      case player2_hand
       when Hand::STONE
         [Result::DRAW, Result::DRAW]
       when Hand::PAPER
@@ -90,10 +89,10 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
       when Hand::SCISSORS
         [Result::WIN, Result::LOSE]
       else
-        raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
+        raise "Invalid player2_hand. player2_hand = #{player2_hand}"
       end
     when Hand::PAPER
-      case player_2_hand
+      case player2_hand
       when Hand::STONE
         [Result::WIN, Result::LOSE]
       when Hand::PAPER
@@ -101,10 +100,10 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
       when Hand::SCISSORS
         [Result::LOSE, Result::WIN]
       else
-        raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
+        raise "Invalid player2_hand. player2_hand = #{player2_hand}"
       end
     when Hand::SCISSORS
-      case player_2_hand
+      case player2_hand
       when Hand::STONE
         [Result::LOSE, Result::WIN]
       when Hand::PAPER
@@ -112,10 +111,10 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
       when Hand::SCISSORS
         [Result::DRAW, Result::DRAW]
       else
-        raise "Invalid player_2_hand. player_2_hand = #{player_2_hand}"
+        raise "Invalid player2_hand. player2_hand = #{player2_hand}"
       end
     else
-      raise "Invalid player_1_hand. player_1_hand = #{player_1_hand}"
+      raise "Invalid player1_hand. player1_hand = #{player1_hand}"
     end
 
   # 結果を保存
@@ -134,21 +133,21 @@ def main # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metric
   janken_detail_2_id = janken_details_count + 2
 
   CSV.open(JANKEN_DETAILS_CSV, 'a') do |csv|
-    csv << [janken_detail_1_id, janken_id, PLAYER_1_ID, player_1_hand.number, player_1_result.number]
-    csv << [janken_detail_2_id, janken_id, PLAYER_2_ID, player_2_hand.number, player_2_result.number]
+    csv << [janken_detail_1_id, janken_id, PLAYER1_ID, player1_hand.number, player1_result.number]
+    csv << [janken_detail_2_id, janken_id, PLAYER2_ID, player2_hand.number, player2_result.number]
   end
 
   # 勝敗の表示
 
-  case player_1_result
+  case player1_result
   when Result::WIN
-    printf(WINNING_MESSAGE_FORMAT, player_1_name)
+    printf(WINNING_MESSAGE_FORMAT, player1.name)
   when Result::LOSE
-    printf(WINNING_MESSAGE_FORMAT, player_2_name)
+    printf(WINNING_MESSAGE_FORMAT, player2.name)
   when Result::DRAW
     printf(DRAW_MESSAGE)
   else
-    raise "Invaild player_1_result. player_1_result = #{player_1_result}"
+    raise "Invaild player1_result. player1_result = #{player1_result}"
   end
 end
 

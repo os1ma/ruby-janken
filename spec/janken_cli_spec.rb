@@ -51,13 +51,13 @@ RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/Desc
   describe '#main' do # rubocop:disable Metrics/BlockLength
     describe '正常な入力' do # rubocop:disable Metrics/BlockLength
       where(
-        :player_1_hand_num,
-        :player_2_hand_num,
-        :player_1_hand_name,
-        :player_2_hand_name,
+        :player1_hand_num,
+        :player2_hand_num,
+        :player1_hand_name,
+        :player2_hand_name,
         :result_message,
-        :player_1_result_num,
-        :player_2_result_num
+        :player1_result_num,
+        :player2_result_num
       ) do
         [
           [0, 0, 'STONE', 'STONE', 'DRAW !!!', 2, 2],
@@ -75,13 +75,13 @@ RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/Desc
       with_them do # rubocop:disable Metrics/BlockLength
         it 'じゃんけんが実行され結果が保存される' do # rubocop:disable Metrics/BlockLength, RSpec/ExampleLength, RSpec/MultipleExpectations
           # 準備
-          $stdin = StringIO.new("#{player_1_hand_num}\n#{player_2_hand_num}")
+          $stdin = StringIO.new("#{player1_hand_num}\n#{player2_hand_num}")
 
           jankens_csv_length_before_test = count_file_lines(JANKENS_CSV)
           janken_details_csv_length_before_test = count_file_lines(JANKEN_DETAILS_CSV)
 
           # 実行と標準出力の検証
-          expected = format(VALID_INPUT_EXPECTED_TEXT, player_1_hand_name, player_2_hand_name, result_message)
+          expected = format(VALID_INPUT_EXPECTED_TEXT, player1_hand_name, player2_hand_name, result_message)
 
           expect do
             Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, '+09:00')) do
@@ -103,16 +103,16 @@ RSpec.describe 'janken_cli' do # rubocop:disable Metrics/BlockLength, RSpec/Desc
           expect(janken_details_csv_rows[-2]).to eq [
             expected_janken_detail_1_id,
             expected_janken_id,
-            PLAYER_1_ID,
-            player_1_hand_num,
-            player_1_result_num
+            PLAYER1_ID,
+            player1_hand_num,
+            player1_result_num
           ].map(&:to_s)
           expect(janken_details_csv_rows[-1]).to eq [
             expected_janken_detail_2_id,
             expected_janken_id,
-            PLAYER_2_ID,
-            player_2_hand_num,
-            player_2_result_num
+            PLAYER2_ID,
+            player2_hand_num,
+            player2_result_num
           ].map(&:to_s)
         end
       end
