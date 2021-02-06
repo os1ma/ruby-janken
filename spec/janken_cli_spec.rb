@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './lib/janken_cli'
+require './app/janken_cli'
 require 'stringio'
 require 'fileutils'
 

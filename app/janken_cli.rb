@@ -2,11 +2,11 @@
 
 require 'csv'
 require 'fileutils'
-require './lib/model/hand'
-require './lib/model/result'
-require './lib/model/player'
-require './lib/model/janken'
-require './lib/model/janken_detail'
+require './app/models/hand'
+require './app/models/result'
+require './app/models/player'
+require './app/models/janken'
+require './app/models/janken_detail'
 
 # 定数定義
 
