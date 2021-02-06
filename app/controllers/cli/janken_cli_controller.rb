@@ -4,12 +4,6 @@ require 'csv'
 require 'fileutils'
 require './app/views/cli/standard_output_view'
 require './app/models/hand'
-require './app/models/result'
-require './app/models/player'
-require './app/models/janken'
-require './app/models/janken_detail'
-require './app/services/player_service'
-require './app/services/janken_service'
 
 # じゃんけんの CLI のコントローラ
 class JankenCliController
@@ -24,9 +18,9 @@ class JankenCliController
   SHOW_HAND_VIEW_TEMPLATE = "#{VIEW_DIR}/show_hand.txt.erb"
   RESULT_VIEW_TEMPLATE = "#{VIEW_DIR}/result.txt.erb"
 
-  def initialize
-    @player_service = PlayerService.new
-    @janken_service = JankenService.new
+  def initialize(player_service, janken_service)
+    @player_service = player_service
+    @janken_service = janken_service
   end
 
   def play

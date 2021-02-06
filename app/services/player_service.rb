@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require './app/daos/csv/player_csv_dao'
-
 # プレイヤーサービス
 class PlayerService
-  def initialize
-    @player_dao = PlayerCsvDao.new
+  def initialize(player_dao)
+    @player_dao = player_dao
   end
 
   def find_player_by_id(player_id)

@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-require './app/controllers/cli/janken_cli_controller'
-require './app/daos/csv/csv_dao_utils'
-require './app/daos/csv/janken_csv_dao'
-require './app/daos/csv/janken_detail_csv_dao'
 require 'stringio'
 require 'fileutils'
+require './app/daos/csv/player_csv_dao'
+require './app/daos/csv/janken_csv_dao'
+require './app/daos/csv/janken_detail_csv_dao'
+require './app/services/player_service'
+require './app/services/janken_service'
+require './app/controllers/cli/janken_cli_controller'
 
 VALID_INPUT_EXPECTED_TEXT = <<~TEXT
   STONE: 0
@@ -51,6 +53,17 @@ RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
     $stdin = STDIN
   end
 
+  let(:janken_cli_controller) do
+    player_dao = PlayerCsvDao.new
+    janken_dao = JankenCsvDao.new
+    janken_detail_dao = JankenDetailCsvDao.new
+
+    player_service = PlayerService.new(player_dao)
+    janken_service = JankenService.new(janken_dao, janken_detail_dao)
+
+    described_class.new(player_service, janken_service)
+  end
+
   describe '#main' do # rubocop:disable Metrics/BlockLength
     describe '正常な入力' do # rubocop:disable Metrics/BlockLength
       where(
@@ -88,7 +101,7 @@ RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
 
           expect do
             Timecop.freeze(Time.new(2021, 2, 3, 4, 5, 6, '+09:00')) do
-              described_class.new.play
+              janken_cli_controller.play
             end
           end.to output(expected).to_stdout
 
@@ -141,7 +154,7 @@ RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
           expected = format(INVALID_INPUT_EXPECTED_TEXT, invalid_input)
 
           expect do
-            described_class.new.play
+            janken_cli_controller.play
           end.to output(expected).to_stdout
         end
       end

@@ -6,15 +6,12 @@ require './app/models/result'
 require './app/models/player'
 require './app/models/janken'
 require './app/models/janken_detail'
-require './app/services/player_service'
-require './app/daos/csv/janken_csv_dao'
-require './app/daos/csv/janken_detail_csv_dao'
 
 # じゃんけんサービス
 class JankenService
-  def initialize
-    @janken_dao = JankenCsvDao.new
-    @janken_detail_dao = JankenDetailCsvDao.new
+  def initialize(janken_dao, janken_detail_dao)
+    @janken_dao = janken_dao
+    @janken_detail_dao = janken_detail_dao
   end
 
   def play(player1, player1_hand, player2, player2_hand) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
