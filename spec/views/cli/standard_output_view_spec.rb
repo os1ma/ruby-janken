@@ -19,13 +19,9 @@ end
 
 RSpec.describe StandardOutputView do
   describe '#show' do
-    it '指定したパラメータを利用したテンプレートが表示される' do # rubocop:disable RSpec/ExampleLength
-      params = {
-        obj1: MyObject.new('Foo'),
-        obj2: MyObject.new('Bar')
-      }
+    it '指定したパラメータを利用したテンプレートが表示される' do
       expect do
-        described_class.new(TEMPLATE_FILE, params).show
+        described_class.new(TEMPLATE_FILE, obj1: MyObject.new('Foo'), obj2: MyObject.new('Bar')).show
       end.to output(EXPECTED).to_stdout
     end
   end
