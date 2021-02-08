@@ -15,7 +15,8 @@ ln -s ../../bin/pre-commit .git/hooks/pre-commit
 ## 実行
 
 ```shell
-ruby ./lib/janken_cli.rb
+docker-compose up -d
+bundle exec ruby ./app/janken_cli.rb
 ```
 
 ## テスト
