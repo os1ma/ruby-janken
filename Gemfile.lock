@@ -11,6 +11,7 @@ GEM
     parallel (1.20.1)
     parser (3.0.0.0)
       ast (~> 2.4.1)
+    pg (1.2.3)
     proc_to_ast (0.1.0)
       coderay
       parser
@@ -65,6 +66,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler-audit (~> 0.7)
+  pg (~> 1.2)
   rspec (~> 3.10)
   rspec-parameterized (~> 0.4)
   rubocop (~> 1.9)
