@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require './app/daos/postgres/postgres_dao_utils'
-
 # じゃんけんを PosgtreSQL と読み書きする DAO
 class JankenDetailPostgresDao
   INSERT_COMMAND = 'INSERT INTO "janken_details" ("janken_id", "player_id", "hand", "result") VALUES %s RETURNING "id"'

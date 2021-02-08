@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pg'
+
 # PostgreSQL のトランザクション管理を提供するモジュール
 module PostgresTransactionManager
   POSTGRES_HOST = 'localhost'
