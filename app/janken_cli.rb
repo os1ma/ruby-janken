@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require './app/daos/csv/player_csv_dao'
+require './app/daos/postgres/player_postgres_dao'
 require './app/daos/csv/janken_csv_dao'
 require './app/daos/csv/janken_detail_csv_dao'
 require './app/services/player_service'
 require './app/services/janken_service'
 require './app/controllers/cli/janken_cli_controller'
 
-player_dao = PlayerCsvDao.new
+player_dao = PlayerPostgresDao.new
 janken_dao = JankenCsvDao.new
 janken_detail_dao = JankenDetailCsvDao.new
 

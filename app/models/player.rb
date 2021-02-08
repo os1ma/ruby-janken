@@ -9,6 +9,11 @@ class Player
     @name = name
   end
 
+  def ==(other)
+    id == other.id &&
+      name == other.name
+  end
+
   def to_s
     "Player(#{id}, #{name})"
   end

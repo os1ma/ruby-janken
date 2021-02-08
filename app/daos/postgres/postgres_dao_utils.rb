@@ -10,9 +10,10 @@ module PostgresDaoUtils
   POSTGRES_USER = 'postgres'
   POSTGRES_PASSWORD = 'password'
 
+  COUNT_QUERY = 'SELECT COUNT(*) AS "count_value" FROM %s'
   class << self
     def count(table_name)
-      query = "SELECT COUNT(*) AS count_value FROM #{table_name}"
+      query = format(COUNT_QUERY, table_name)
 
       with_connection do |conn|
         res = conn.exec(query)
