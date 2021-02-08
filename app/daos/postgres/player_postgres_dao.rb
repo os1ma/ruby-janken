@@ -11,7 +11,7 @@ class PlayerPostgresDao
   end
 end
 
-# PgWrapper で利用するプライヤークラスのマッピング定義
+# PgWrapper で利用するプライヤーのマッピング定義
 module PlayerMapper
   class << self
     def map(hash)
