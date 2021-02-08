@@ -7,7 +7,7 @@ require './app/daos/csv/csv_dao_utils'
 class JankenCsvDao
   JANKENS_CSV = "#{CsvDaoUtils::DATA_DIR}/jankens.csv"
 
-  def insert(janken)
+  def insert(_, janken)
     janken_id = CsvDaoUtils.count_file_lines(JANKENS_CSV) + 1
 
     FileUtils.touch(JANKENS_CSV)

@@ -6,18 +6,16 @@ require './app/daos/postgres/postgres_dao_utils'
 class JankenDetailPostgresDao
   INSERT_COMMAND = 'INSERT INTO "janken_details" ("janken_id", "player_id", "hand", "result") VALUES %s RETURNING "id"'
 
-  def insert_all(janken_details)
-    PostgresDaoUtils.with_connection do |conn|
-      placeholders = create_insert_all_placeholders(janken_details)
-      sql = format(INSERT_COMMAND, placeholders)
+  def insert_all(conn, janken_details)
+    placeholders = create_insert_all_placeholders(janken_details)
+    sql = format(INSERT_COMMAND, placeholders)
 
-      params = janken_details_to_param_array(janken_details)
+    params = janken_details_to_param_array(janken_details)
 
-      conn.prepare(sql, sql)
-      res = conn.exec_prepared(sql, params)
+    conn.prepare(sql, sql)
+    res = conn.exec_prepared(sql, params)
 
-      insert_all_result_to_janken_detail_with_ids(res, janken_details)
-    end
+    insert_all_result_to_janken_detail_with_ids(res, janken_details)
   end
 
   private

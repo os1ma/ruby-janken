@@ -2,6 +2,7 @@
 
 require 'stringio'
 require 'fileutils'
+require './app/daos/csv/dummy_transaction_manager'
 require './app/daos/csv/player_csv_dao'
 require './app/daos/csv/janken_csv_dao'
 require './app/daos/csv/janken_detail_csv_dao'
@@ -54,12 +55,13 @@ RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
   end
 
   let(:janken_cli_controller) do
+    tm = DummyTransactionManager
     player_dao = PlayerCsvDao.new
     janken_dao = JankenCsvDao.new
     janken_detail_dao = JankenDetailCsvDao.new
 
-    player_service = PlayerService.new(player_dao)
-    janken_service = JankenService.new(janken_dao, janken_detail_dao)
+    player_service = PlayerService.new(tm, player_dao)
+    janken_service = JankenService.new(tm, janken_dao, janken_detail_dao)
 
     described_class.new(player_service, janken_service)
   end
