@@ -1,0 +1,17 @@
+Table players {
+  id int [pk, increment, not null]
+  name varchar [not null]
+}
+
+Table jankens {
+  id int [pk, increment, not null]
+  played_at timestamp [not null]
+}
+ 
+Table janken_details {
+  id int [pk, increment, not null]
+  janken_id int [not null, ref: > jankens.id]
+  player_id int [not null, ref: > players.id]
+  hand int [not null]
+  result int [not null]
+}
