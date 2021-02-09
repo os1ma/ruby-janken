@@ -12,15 +12,25 @@
 ln -s ../../bin/pre-commit .git/hooks/pre-commit
 ```
 
-## 実行
+## CLI アプリケーションの実行
 
 ```shell
 docker-compose up -d
 bundle exec ruby ./app/janken_cli.rb
 ```
 
-## テスト
+## 自動テスト・静的解析
 
 ```shell
 ./bin/test.sh
+```
+
+## Rack アプリケーションの起動と動作確認
+
+```shell
+bundle exec rackup ./app/config.ru
+```
+
+```shell
+curl localhost:9292/api/health
 ```
