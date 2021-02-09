@@ -3,7 +3,7 @@
 require './app/services/janken_service'
 require './app/daos/postgres/postgres_transaction_manager'
 require './app/daos/postgres/janken_postgres_dao'
-require './app/models/hand'
+require './app/models/janken/hand'
 
 RSpec.describe JankenService do # rubocop:disable Metrics/BlockLength:
   let(:tm) do

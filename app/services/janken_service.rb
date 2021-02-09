@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require './app/views/cli/standard_output_view'
-require './app/models/hand'
-require './app/models/result'
-require './app/models/player'
-require './app/models/janken'
-require './app/models/janken_detail'
-require './app/models/janken_executor'
+require './app/models/janken/hand'
+require './app/models/janken/result'
+require './app/models/janken/janken'
+require './app/models/janken/janken_detail'
+require './app/models/janken/janken_executor'
+require './app/models/player/player'
 
 # じゃんけんサービス
 class JankenService

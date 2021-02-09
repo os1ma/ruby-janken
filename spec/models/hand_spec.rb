@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './app/models/hand'
+require './app/models/janken/hand'
 
 RSpec.describe Hand do # rubocop:disable Metrics/BlockLength
   describe 'STONE' do

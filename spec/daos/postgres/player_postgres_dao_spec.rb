@@ -2,7 +2,7 @@
 
 require './app/daos/postgres/postgres_transaction_manager'
 require './app/daos/postgres/player_postgres_dao'
-require './app/models/player'
+require './app/models/player/player'
 
 RSpec.describe PlayerPostgresDao do
   let(:dao) do

@@ -3,7 +3,7 @@
 require 'csv'
 require 'fileutils'
 require './app/views/cli/standard_output_view'
-require './app/models/hand'
+require './app/models/janken/hand'
 
 # じゃんけんの CLI のコントローラ
 class JankenCliController
