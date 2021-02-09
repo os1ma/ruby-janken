@@ -14,7 +14,7 @@ janken_dao = JankenPostgresDao.new
 janken_detail_dao = JankenDetailPostgresDao.new
 
 player_service = PlayerService.new(tm, player_dao)
-janken_service = JankenService.new(tm, janken_dao, janken_detail_dao)
+janken_service = JankenService.new(tm, player_dao, janken_dao, janken_detail_dao)
 
 janken_cli_controller = JankenCliController.new(player_service, janken_service)
 

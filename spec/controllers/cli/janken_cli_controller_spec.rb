@@ -61,7 +61,7 @@ RSpec.describe JankenCliController do # rubocop:disable Metrics/BlockLength
     janken_detail_dao = JankenDetailCsvDao.new
 
     player_service = PlayerService.new(tm, player_dao)
-    janken_service = JankenService.new(tm, janken_dao, janken_detail_dao)
+    janken_service = JankenService.new(tm, player_dao, janken_dao, janken_detail_dao)
 
     described_class.new(player_service, janken_service)
   end
