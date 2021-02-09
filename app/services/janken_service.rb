@@ -15,46 +15,16 @@ class JankenService
     @janken_detail_dao = janken_detail_dao
   end
 
-  def play(player1, player1_hand, player2, player2_hand) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
-    @tm.transactional do |tx| # rubocop:disable Metrics/BlockLength
+  def play(player1, player1_hand, player2, player2_hand) # rubocop:disable Metrics/MethodLength
+    @tm.transactional do |tx|
       # 勝敗判定
       player1_result, player2_result =
-        case player1_hand
-        when Hand::STONE
-          case player2_hand
-          when Hand::STONE
-            [Result::DRAW, Result::DRAW]
-          when Hand::PAPER
-            [Result::LOSE, Result::WIN]
-          when Hand::SCISSORS
-            [Result::WIN, Result::LOSE]
-          else
-            raise "Invalid player2_hand. player2_hand = #{player2_hand}"
-          end
-        when Hand::PAPER
-          case player2_hand
-          when Hand::STONE
-            [Result::WIN, Result::LOSE]
-          when Hand::PAPER
-            [Result::DRAW, Result::DRAW]
-          when Hand::SCISSORS
-            [Result::LOSE, Result::WIN]
-          else
-            raise "Invalid player2_hand. player2_hand = #{player2_hand}"
-          end
-        when Hand::SCISSORS
-          case player2_hand
-          when Hand::STONE
-            [Result::LOSE, Result::WIN]
-          when Hand::PAPER
-            [Result::WIN, Result::LOSE]
-          when Hand::SCISSORS
-            [Result::DRAW, Result::DRAW]
-          else
-            raise "Invalid player2_hand. player2_hand = #{player2_hand}"
-          end
+        if player1_hand.win?(player2_hand)
+          [Result::WIN, Result::LOSE]
+        elsif player2_hand.win?(player1_hand)
+          [Result::LOSE, Result::WIN]
         else
-          raise "Invalid player1_hand. player1_hand = #{player1_hand}"
+          [Result::DRAW, Result::DRAW]
         end
 
       # 結果を保存

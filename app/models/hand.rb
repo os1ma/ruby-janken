@@ -11,6 +11,19 @@ module Hand
       @name = name
     end
 
+    def win?(other)
+      case self
+      when STONE
+        other == SCISSORS
+      when PAPER
+        other == STONE
+      when SCISSORS
+        other == PAPER
+      else
+        raise "Invalid hand. self = #{self}"
+      end
+    end
+
     def to_s
       "Hand(#{number}, #{name})"
     end
@@ -26,7 +39,7 @@ module Hand
       all.map(&:number).map(&:to_s).include?(str)
     end
 
-    def value_of_num_string(str)
+    def of_num_string(str)
       raise "Invalid string for hand num. str = #{str}" unless valid_hand_num_string?(str)
 
       hand_num = str.to_i

@@ -48,7 +48,7 @@ class JankenCliController
 
       input = gets.chomp
 
-      return Hand.value_of_num_string(input) if Hand.valid_hand_num_string?(input)
+      return Hand.of_num_string(input) if Hand.valid_hand_num_string?(input)
 
       StandardOutputView.new(INVALID_INPUT_VIEW_TEMPLATE, input: input).show
     end
