@@ -17,7 +17,11 @@ RSpec.describe JankenService do # rubocop:disable Metrics/BlockLength:
   let(:service) do
     player_dao = PlayerPostgresDao.new
     janken_detail_dao = :メソッド呼び出し時に例外発生
-    described_class.new(tm, player_dao, janken_dao, janken_detail_dao)
+
+    player_repository = PlayerRepository.new(player_dao)
+    janken_repository = JankenRepository.new(janken_dao, janken_detail_dao)
+
+    described_class.new(tm, player_repository, janken_repository)
   end
 
   describe '#play' do
