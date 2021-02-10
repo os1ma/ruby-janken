@@ -14,7 +14,7 @@ cd "${PROJECT_HOME}"
 
 set +o xtrace
 echo 'start git remote add heoku...'
-git remote add heroku "https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_APPNAME}.git"
+git remote add heroku "https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_APP_NAME}.git"
 echo 'end git remote add heroku...'
 set -o xtrace
 
