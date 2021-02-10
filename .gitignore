@@ -1,5 +1,8 @@
+# Bundler
+/.bundle/
+
 # RSpec
-spec/examples.txt
+/spec/examples.txt
 
 # Data
 /data/jankens.csv
