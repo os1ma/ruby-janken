@@ -28,7 +28,7 @@ bundle exec ruby ./app/janken_cli.rb
 ## Rack アプリケーションの起動と動作確認
 
 ```shell
-bundle exec rackup ./app/config.ru
+bundle exec rackup config.ru
 ```
 
 ```shell
