@@ -18,4 +18,5 @@ git remote add heroku "https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_
 echo 'end git remote add heroku...'
 set -o xtrace
 
+git pull heroku main
 git push heroku main
