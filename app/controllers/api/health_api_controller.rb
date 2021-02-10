@@ -2,7 +2,12 @@
 
 # ヘルスチェックの API コントローラ
 class HealthApiController
+  def initialize(health_query_service)
+    @health_query_service = health_query_service
+  end
+
   def get
-    { status: 200 }
+    status =  @health_query_service.healthy? ? 200 : 503
+    { status: status }
   end
 end
