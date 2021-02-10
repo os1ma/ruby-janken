@@ -39,8 +39,7 @@ curl -X POST -d '{"player1Id": 1, "player1Hand": 0, "player2Id": 2, "player2Hand
 ## Heroku へのデプロイ
 
 ```shell
-heroku git:remote -a "${HEROKU_APP_NAME}"
-git push heroku main
+./bin/deploy.sh
 ```
 
 参考
