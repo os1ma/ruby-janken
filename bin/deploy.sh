@@ -12,5 +12,10 @@ readonly HEROKU_APP_NAME='ruby-janken'
 
 cd "${PROJECT_HOME}"
 
-heroku git:remote -a "${HEROKU_APP_NAME}"
+set +o xtrace
+echo 'start git remote add heoku...'
+git remote add heroku "https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_APPNAME}.git"
+echo 'end git remote add heroku...'
+set -o xtrace
+
 git push heroku main
