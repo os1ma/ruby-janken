@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+
 # pg のラッパーモジュール
 module PgWrapper
   COUNT_QUERY = 'SELECT COUNT(*) AS "count_value" FROM %s'
 
   class << self
     def find(conn, mapper, sql, params)
-      conn.prepare(sql, sql)
-      res = conn.exec_prepared(sql, params)
+      uuid = SecureRandom.uuid
+      conn.prepare(uuid, sql)
+      res = conn.exec_prepared(uuid, params)
       res.map { |r| mapper.map(r) }
     end
 
@@ -26,14 +29,11 @@ module PgWrapper
 
       column_names = get_sorted_column_names(mapper, objects)
       sql = build_insert_sql(table_name, column_names, objects.size)
+      params = build_sql_params(mapper, objects)
 
-      params = objects.map { |o| mapper.object_to_insert_params(o) }
-                      .flat_map do |hash|
-                        hash.keys.sort.map { |key| hash[key] }
-                      end
-
-      conn.prepare(sql, sql)
-      res = conn.exec_prepared(sql, params)
+      uuid = SecureRandom.uuid
+      conn.prepare(uuid, sql)
+      res = conn.exec_prepared(uuid, params)
 
       result_to_object_with_ids(mapper, res, objects)
     end
@@ -80,6 +80,13 @@ module PgWrapper
         # ($1, $2, ...) という文字列を作成
         '(' + (0...column_count).map { |j| '$' + (offset + j + 1).to_s }.join(', ') + ')' # rubocop:disable Style/StringConcatenation
       end.join(', ')
+    end
+
+    def build_sql_params(mapper, objects)
+      objects.map { |o| mapper.object_to_insert_params(o) }
+             .flat_map do |hash|
+               hash.keys.sort.map { |key| hash[key] }
+             end
     end
   end
 end

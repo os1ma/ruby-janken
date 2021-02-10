@@ -3,7 +3,7 @@
 # じゃんけんの実行機
 module JankenExecutor
   class << self
-    def play(player1, player1_hand, player2, player2_hand) # rubocop:disable Metrics/MethodLength
+    def play(player1_id, player1_hand, player2_id, player2_hand) # rubocop:disable Metrics/MethodLength
       # 勝敗判定
       player1_result, player2_result =
         if player1_hand.win?(player2_hand)
@@ -16,8 +16,8 @@ module JankenExecutor
 
       # じゃんけん明細の作成
       janken_details = [
-        JankenDetail.new(nil, nil, player1.id, player1_hand, player1_result),
-        JankenDetail.new(nil, nil, player2.id, player2_hand, player2_result)
+        JankenDetail.new(nil, nil, player1_id, player1_hand, player1_result),
+        JankenDetail.new(nil, nil, player2_id, player2_hand, player2_result)
       ]
 
       # じゃんけんの作成

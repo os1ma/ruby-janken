@@ -33,4 +33,5 @@ bundle exec rackup ./app/config.ru
 
 ```shell
 curl localhost:9292/api/health
+curl -X POST -d '{"player1Id": 1, "player1Hand": 0, "player2Id": 2, "player2Hand": 1}' localhost:9292/api/jankens
 ```

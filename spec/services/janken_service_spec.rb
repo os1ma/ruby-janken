@@ -31,9 +31,9 @@ RSpec.describe JankenService do # rubocop:disable Metrics/BlockLength:
       end
 
       expect do
-        player1 = Player.new(1, 'Alice')
-        player2 = Player.new(2, 'Bob')
-        service.play(player1, Hand::STONE, player2, Hand::STONE).name
+        player1_id = 1
+        player2_id = 2
+        service.play(player1_id, Hand::STONE, player2_id, Hand::STONE).name
       end.to raise_error NoMethodError
 
       janken_count_after_play = tm.transactional do |tx|

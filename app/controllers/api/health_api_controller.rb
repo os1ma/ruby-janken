@@ -2,7 +2,7 @@
 
 # ヘルスチェックの API コントローラ
 class HealthApiController
-  def index
+  def get
     { status: 200 }
   end
 end

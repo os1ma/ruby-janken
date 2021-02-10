@@ -36,7 +36,7 @@ class JankenCliController
     puts_player_hand(player2, player2_hand)
 
     # 勝敗を表示
-    winner = @janken_service.play(player1, player1_hand, player2, player2_hand)
+    winner = @janken_service.play(PLAYER1_ID, player1_hand, PLAYER2_ID, player2_hand)
     StandardOutputView.new(RESULT_VIEW_TEMPLATE, winner: winner).show
   end
 
