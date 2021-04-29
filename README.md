@@ -1,8 +1,8 @@
 # ruby-janken
 
-![badge.svg](https://github.com/os1ma/ruby-janken/workflows/workflow/main.svg)
+[![main](https://github.com/os1ma/ruby-janken/actions/workflows/main.yaml/badge.svg)](https://github.com/os1ma/ruby-janken/actions/workflows/main.yaml)
 
-![badge.svg](https://github.com/os1ma/ruby-janken/workflows/workflow/schedule.svg)
+[![schedule](https://github.com/os1ma/ruby-janken/actions/workflows/schedule.yaml/badge.svg)](https://github.com/os1ma/ruby-janken/actions/workflows/schedule.yaml)
 
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-rubocop-brightgreen.svg)](https://github.com/rubocop-hq/rubocop)
 
