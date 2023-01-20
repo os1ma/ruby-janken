@@ -10,9 +10,7 @@ readonly PROJECT_HOME="${SCRIPT_DIR}/.."
 
 cd "${PROJECT_HOME}"
 
-# PostgreSQL 起動
-docker-compose down
-docker-compose up -d
+bundle install
 
 # スタイルチェック
 bundle exec rubocop

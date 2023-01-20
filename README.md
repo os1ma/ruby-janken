@@ -2,8 +2,6 @@
 
 [![main](https://github.com/os1ma/ruby-janken/actions/workflows/main.yaml/badge.svg)](https://github.com/os1ma/ruby-janken/actions/workflows/main.yaml)
 
-[![schedule](https://github.com/os1ma/ruby-janken/actions/workflows/schedule.yaml/badge.svg)](https://github.com/os1ma/ruby-janken/actions/workflows/schedule.yaml)
-
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-rubocop-brightgreen.svg)](https://github.com/rubocop-hq/rubocop)
 
 ※ 記載しているコマンドは、全てプロジェクトのルートディレクトリで実行することを想定しています
@@ -14,10 +12,16 @@
 ln -s ../../bin/pre-commit .git/hooks/pre-commit
 ```
 
-## CLI アプリケーションの実行
+## コンテナの起動
 
 ```shell
 docker-compose up -d
+docker-compose exec ruby bash
+```
+
+## CLI アプリケーションの実行
+
+```shell
 bundle exec ruby ./app/janken_cli.rb
 ```
 
@@ -30,7 +34,7 @@ bundle exec ruby ./app/janken_cli.rb
 ## Rack アプリケーションの起動と動作確認
 
 ```shell
-bundle exec rackup config.ru
+bundle exec rackup config.ru -o 0.0.0.0
 ```
 
 ```shell

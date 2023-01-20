@@ -3,18 +3,22 @@ name: main
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
     branches:
-    - main
+      - main
+  schedule:
+    # 日本時間で毎晩 21 時
+    - cron: '0 12 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.0.0
-        bundler-cache: true
-    - run: ./bin/test.sh
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.0
+          bundler-cache: true
+      - run: docker-compose up -d
+      - run: docker-compose exec ruby ./bin/test.sh

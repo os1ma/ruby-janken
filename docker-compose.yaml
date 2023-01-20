@@ -1,5 +1,15 @@
 version: '3'
 services:
+  ruby:
+    build: .
+    command: sleep infinity
+    ports:
+      - 9292:9292
+    environment:
+      - POSTGRES_HOST=postgres
+    volumes:
+      - ${PWD}:/app
+    working_dir: /app
   postgres:
     image: postgres:13.1-alpine
     ports:

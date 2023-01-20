@@ -5,7 +5,7 @@ require 'pg'
 # PostgreSQL のトランザクション管理を提供するモジュール
 module PostgresTransactionManager
   POSTGRES_URL = ENV['DATABASE_URL']
-  POSTGRES_HOST = 'localhost'
+  POSTGRES_HOST = ENV['POSTGRES_HOST'] || 'localhost'
   POSTGRES_PORT = '5432'
   POSTGRES_DB = 'janken'
   POSTGRES_USER = 'postgres'
