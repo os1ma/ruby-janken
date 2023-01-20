@@ -21,4 +21,4 @@ jobs:
           ruby-version: 3.0.0
           bundler-cache: true
       - run: docker-compose up -d
-      - run: docker-compose exec ruby ./bin/test.sh
+      - run: docker-compose exec -T ruby ./bin/test.sh
